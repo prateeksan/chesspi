@@ -1,9 +1,12 @@
 # Python v3.5.1
 from flask import Flask
 from flask_restful import Resource, Api
+from flask.ext.sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 api = Api(app)
+app.config.from_object('config')
+db = SQLAlchemy(app)
 
 class HelloWorld(Resource):
     def get(self):
