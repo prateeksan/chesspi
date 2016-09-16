@@ -9,4 +9,5 @@ pgnparser==1.0
 python-dateutil==2.5.3
 pytz==2016.6.1
 six==1.10.0
+SQLAlchemy==1.0.15
 Werkzeug==0.11.11
