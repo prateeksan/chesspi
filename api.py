@@ -7,6 +7,7 @@ api = Api(app)
 
 games = ["Game 0", "Game 1", "Game 2"]
 
+# Abort the request if a game cannot be found
 def abort_if_game_doesnt_exist(game_id):
     #Can be changed based on how games are retrieved
     if game_id > len(games) -1:
@@ -24,9 +25,17 @@ class Game(Resource):
         abort_if_game_doesnt_exist(game_id)
         return games[game_id]
 
+
+# GameList
+# Shows a list of all games
+class GameList(Resource):
+    def get(self):
+        return games
+
+# API Routing
 api.add_resource(HelloWorld, '/')
 api.add_resource(Game, '/games/<game_id>')
-
+api.add_resource(GameList, '/games')
 
 if __name__ == '__main__':
     app.run(debug=True)
