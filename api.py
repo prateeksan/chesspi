@@ -29,9 +29,16 @@ def abort_if_game_doesnt_exist(game_id):
     if game_id > len(games) -1:
         abort(404, message="Game {} doesn't exist".format(game_id))
 
-class HelloWorld(Resource):
+class Index(Resource):
     def get(self):
-        return {'hello': 'world', 'chesspi': 'Chess API'}
+        return {
+            'chesspi': 'Chess API',
+            'sample_calls': [
+                '/games',
+                '/games/16',
+                '/games?name=chandler',
+                '/games?eco=b22']
+        }
 
 # Game
 # Shows a single game in the game list
@@ -75,7 +82,7 @@ class GameList(Resource):
                 } for g in filtered_games]
 
 # API Routing
-api.add_resource(HelloWorld, '/')
+api.add_resource(Index, '/')
 api.add_resource(Game, '/games/<game_id>')
 api.add_resource(GameList, '/games')
 
