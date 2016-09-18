@@ -14,12 +14,20 @@ class Index(Resource):
                     'description': 'Show game with id 16'
                 },
                 {
+                    'url': '/games/16?format=pgn',
+                    'description': 'Show game with id 16 in pgn format'
+                },
+                {
                     'url': '/games?name=anand',
                     'description': 'Show games played by Anand'
                 },
                 {
                     'url': '/games?eco=b22',
                     'description': 'Show games opening with ECO B22'
+                },
+                {
+                    'url': '/games?format=pgn',
+                    'description': 'Show games in pgn format'
                 },
                 {
                     'url': '/players',

@@ -1,11 +1,31 @@
-from flask_restful import Resource, abort, reqparse
+from flask_restful import Resource, abort, reqparse, fields, marshal
 import pgn
 
 # Import games list
 from chesspi import games
 
+# Set up request fields
+game_fields = {
+    'event': fields.String,
+    'site': fields.String,
+    'date': fields.String,
+    'round': fields.String,
+    'white': fields.String,
+    'black': fields.String,
+    'result': fields.String,
+    'whiteelo': fields.String,
+    'blackelo': fields.String,
+    'eco': fields.String,
+    'moves': fields.List(fields.String),
+}
+
 # Set up parser
 parser = reqparse.RequestParser(trim=True)
+parser.add_argument('format', type=str,
+    default="json",
+    choices=("json", "pgn"),
+    case_sensitive=False,
+    help='Valid formats: json (default) or pgn')
 parser.add_argument('name', type=str, 
     case_sensitive=False,
     store_missing=False,
@@ -19,9 +39,10 @@ parser.add_argument('eco', type=str,
 # Shows a single game in the game list
 class Game(Resource):
     def get(self, game_id):
+        args = parser.parse_args()
         game_id = int(game_id)
         abort_if_game_doesnt_exist(game_id)
-        return format_pgn(games[game_id])
+        return format_pgn(games[game_id], args['format'])
 
 # GameList
 # Shows a list of all games
@@ -35,20 +56,15 @@ class GameList(Resource):
         else:
             filtered_games = games
 
-        return [format_pgn(game) for game in filtered_games]
+        return [format_pgn(game, args['format']) for game in filtered_games]
 
 # Format pgn object to dictionary
-def format_pgn(game):
-    return {
-        'date': game.date,
-        'site': game.site,
-        'event': game.event,
-        'black': game.black,
-        'white': game.white,
-        'eco': game.eco,
-        'result': game.result,
-        'pgn': pgn.dumps(game),
-    }
+def format_pgn(game, output_format):
+
+    if output_format.lower() == 'pgn':
+        return pgn.dumps(game)
+
+    return marshal(game, game_fields)
 
 # Abort the request if a game cannot be found
 def abort_if_game_doesnt_exist(game_id):
