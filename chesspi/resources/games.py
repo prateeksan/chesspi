@@ -1,10 +1,8 @@
 from flask_restful import Resource, abort, reqparse
 import pgn
 
-# Load games
-# TODO: Move the loading of game data to common area
-games_input = open('sample_data/kasparov.pgn').read()
-games = pgn.loads(games_input)
+# Import games list
+from chesspi import games
 
 # Set up parser
 parser = reqparse.RequestParser(trim=True)

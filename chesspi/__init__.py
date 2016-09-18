@@ -2,6 +2,11 @@
 
 from flask import Flask
 from flask_restful import Api
+
+# initialize games from sample data
+from chesspi.common.models import games
+
+# import resources
 from chesspi.resources.games import Game, GameList
 from chesspi.resources.index import Index
 
