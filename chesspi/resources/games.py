@@ -21,7 +21,7 @@ class Game(Resource):
     def get(self, game_id):
         game_id = int(game_id)
         abort_if_game_doesnt_exist(game_id)
-        return {'pgn': pgn.dumps(games[game_id])}
+        return format_pgn(games[game_id])
 
 # GameList
 # Shows a list of all games
@@ -35,13 +35,20 @@ class GameList(Resource):
         else:
             filtered_games = games
 
-        return [{
-                'date': g.date,
-                'black': g.black,
-                'white': g.white,
-                'eco': g.eco,
-                'pgn': pgn.dumps(g),
-                } for g in filtered_games]
+        return [format_pgn(game) for game in filtered_games]
+
+# Format pgn object to dictionary
+def format_pgn(game):
+    return {
+        'date': game.date,
+        'site': game.site,
+        'event': game.event,
+        'black': game.black,
+        'white': game.white,
+        'eco': game.eco,
+        'result': game.result,
+        'pgn': pgn.dumps(game),
+    }
 
 # Abort the request if a game cannot be found
 def abort_if_game_doesnt_exist(game_id):
