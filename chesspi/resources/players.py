@@ -1,4 +1,4 @@
-from flask_restful import Resource, abort, reqparse
+from flask_restful import Resource
 import pgn
 
 # Import games list
