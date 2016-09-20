@@ -2,6 +2,7 @@
 
 from flask import Flask
 from flask_restful import Api
+from flask.ext.sqlalchemy import SQLAlchemy
 
 # initialize games from sample data
 from app.common.models import games
@@ -14,6 +15,10 @@ from app.resources.players import PlayerList
 
 app = Flask(__name__)
 api = Api(app)
+app.config.from_object('config')
+db = SQLAlchemy(app)
+
+from app import models
 
 # API Routing
 api.add_resource(Index, '/')
