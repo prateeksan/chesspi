@@ -1,4 +1,4 @@
-from api import db
+from app import db
 
 class Game(db.Model):
 
