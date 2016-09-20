@@ -16,3 +16,5 @@ api.add_resource(HelloWorld, '/test')
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+# TODO(https://github.com/mmautner/simple_api use this)
