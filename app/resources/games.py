@@ -2,7 +2,7 @@ from flask_restful import Resource, abort, reqparse, fields, marshal
 import pgn
 
 # Import games list
-from chesspi import games
+from app import games
 
 # Set up request fields
 game_fields = {
