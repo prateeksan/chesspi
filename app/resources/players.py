@@ -2,7 +2,7 @@ from flask_restful import Resource
 import pgn
 
 # Import games list
-from chesspi import games
+from app import games
 
 # Player
 # Shows a single eco code

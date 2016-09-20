@@ -4,13 +4,13 @@ from flask import Flask
 from flask_restful import Api
 
 # initialize games from sample data
-from chesspi.common.models import games
+from app.common.models import games
 
 # import resources
-from chesspi.resources.games import Game, GameList
-from chesspi.resources.index import Index
-from chesspi.resources.eco_codes import EcoCodeList
-from chesspi.resources.players import PlayerList
+from app.resources.games import Game, GameList
+from app.resources.index import Index
+from app.resources.eco_codes import EcoCodeList
+from app.resources.players import PlayerList
 
 app = Flask(__name__)
 api = Api(app)
