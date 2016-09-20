@@ -5,7 +5,7 @@ from flask_restful import Api
 from flask.ext.sqlalchemy import SQLAlchemy
 
 # initialize games from sample data
-from app.common.models import games
+from app.common.pseudo_models import games
 
 # import resources
 from app.resources.games import Game, GameList
