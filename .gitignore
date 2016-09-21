@@ -1,2 +1,6 @@
 __pycache__
+*.pyc
 
+
+app.db
+db_repository
