@@ -2,23 +2,25 @@
 
 from flask import Flask
 from flask_restful import Api
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from flask_sqlalchemy import SQLAlchemy
 
-# initialize games from sample data
+app = Flask(__name__)
+api = Api(app)
+app.config.from_object('config')
+db = SQLAlchemy(app)
+limiter = Limiter(app, key_func=get_remote_address)
+
+# import models
 from app.common.pseudo_models import games
+from app import models
 
 # import resources
 from app.resources.games import Game, GameList
 from app.resources.index import Index
 from app.resources.eco_codes import EcoCodeList
 from app.resources.players import PlayerList
-
-app = Flask(__name__)
-api = Api(app)
-app.config.from_object('config')
-db = SQLAlchemy(app)
-
-from app import models
 
 # API Routing
 api.add_resource(Index, '/')

@@ -3,6 +3,7 @@ import pgn
 
 # Import games list
 from app import games
+from app import limiter
 
 # Set up request fields
 game_fields = {
@@ -47,6 +48,7 @@ class Game(Resource):
 # GameList
 # Shows a list of all games
 class GameList(Resource):
+    decorators = [limiter.limit("1/second")]
     def get(self):
         args = parser.parse_args()
 
