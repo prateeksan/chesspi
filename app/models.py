@@ -7,8 +7,8 @@ class Pairing(db.Model):
     __tablename__ = 'pairings'
 
     id = db.Column('id', db.Integer, primary_key=True)
-    game_id = db.Column(db.Integer, db.ForeignKey('Game.id'))
-    player_id = db.Column(db.Integer, db.ForeignKey('Player.id'))
+    game_id = db.Column(db.Integer, db.ForeignKey('games.id'))
+    player_id = db.Column(db.Integer, db.ForeignKey('players.id'))
     color = db.Column('colour', db.String(32))
 
     def __repr__(self):
@@ -19,11 +19,11 @@ class Pairing(db.Model):
 class Game(db.Model):
     """This table stores games with moves and other info."""
 
-    __tablename__ = 'Game'
+    __tablename__ = 'games'
 
     id = db.Column(db.Integer, primary_key=True)
     pgn = db.Column(db.String(120), index=True, unique=True)
-    players = db.relationship('Player', secondary='pairings', backref='Game')
+    players = db.relationship('Player', secondary='pairings', backref='game')
 
     def __repr__(self):
         return '<Game %r>' % (self.id)
@@ -31,13 +31,13 @@ class Game(db.Model):
 class Player(db.Model):
     """This table stores player names and other player constants."""
 
-    __tablename__ = 'Player'
+    __tablename__ = 'players'
 
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(64))
     middle_name = db.Column(db.String(64))
     last_name = db.Column(db.String(64))
-    games = db.relationship('Game', secondary='pairings', backref='Player')
+    games = db.relationship('Game', secondary='pairings', backref='player')
 
     def __repr__(self):
       return '<Player %r, %r %r>' % (self.last_name, self.first_name, self.middle_name)
