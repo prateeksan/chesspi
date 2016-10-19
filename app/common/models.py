@@ -23,6 +23,16 @@ class Game(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     pgn = db.Column(db.String(120), index=True, unique=True)
+    event = db.Column(db.String(64))
+    site = db.Column(db.String(64))
+    date = db.Column(db.String(32))
+    # Since round is a built-in python function, we will use match_round
+    match_round = db.Column(db.Integer)
+    result = db.Column(db.String)
+    white_elo = db.Column(db.Integer)
+    black_elo = db.Column(db.Integer)
+    eco = db.Column(db.String(32))
+    moves = db.Column(db.String(120))
     players = db.relationship('Player', secondary='pairings', backref='game')
 
     def __repr__(self):
