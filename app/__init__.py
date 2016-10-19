@@ -14,7 +14,7 @@ limiter = Limiter(app, key_func=get_remote_address)
 
 # import models
 from app.common.pseudo_models import games
-from app import models
+from app.common import models
 
 # import resources
 from app.resources.games import Game, GameList
