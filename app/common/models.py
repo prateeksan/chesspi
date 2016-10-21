@@ -31,7 +31,7 @@ class Game(db.Model):
     white_elo = db.Column(db.Integer)
     black_elo = db.Column(db.Integer)
     eco = db.Column(db.String(32))
-    # TODO(limit text size for moves)
+    # TODO(limit text size for moves, sqlite3 can't do this so it needs to be done manually)
     moves = db.Column(db.Text())
     players = db.relationship('Player', secondary='pairings', backref='game')
     # TODO(add a sensible unique constraint)
