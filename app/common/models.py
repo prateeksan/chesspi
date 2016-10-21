@@ -31,7 +31,8 @@ class Game(db.Model):
     white_elo = db.Column(db.Integer)
     black_elo = db.Column(db.Integer)
     eco = db.Column(db.String(32))
-    moves = db.Column(db.String(1600))
+    # TODO(limit text size for moves)
+    moves = db.Column(db.Text())
     players = db.relationship('Player', secondary='pairings', backref='game')
     # TODO(add a sensible unique constraint)
     def __repr__(self):
