@@ -26,10 +26,14 @@ class GameParser:
                 self.__add_pairings(game_id=db_game_id,
                                     player_ids=db_player_ids)
 
-    def player_in_db(player):
+    def player_in_db(player, stringified=False):
         """Takes a player name and checks if player in db
-        If present, it returns the player id,
-        else returns None"""
+        If present, it returns the player id, else returns None.
+        If player is stringified, it parses the name into a dict.
+        """
+
+        if stringified:
+            player = self.__parse_player_name(player)
 
         # TODO(complete this)
 
