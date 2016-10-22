@@ -34,8 +34,14 @@ class GameParser:
 
         if stringified:
             player = self.__parse_player_name(player)
+        player_in_db = models.Player.query.filter_by(
+                        first_name=player['first_name'],
+                        last_name=player['first_name'])
 
-        # TODO(complete this)
+        if player_in_db.count() > 0:
+            return player_in_db.first().id
+        else:
+            return None
 
     def __add_game(self, game):
         """Takes a single game object and adds it to the Game table in the db"""
