@@ -68,14 +68,12 @@ class GameParser:
         if not white_id:
             db_white = models.Player(
                     first_name= white_parsed['first_name'],
-                    middle_name = white_parsed['middle_name'],
                     last_name = white_parsed['last_name']
                     )
 
         if not black_id:
             db_black = models.Player(
                     first_name= black_parsed['first_name'],
-                    middle_name = black_parsed['middle_name'],
                     last_name = black_parsed['last_name']
                     )
 
@@ -84,11 +82,17 @@ class GameParser:
 
     def __parse_player_name(self, name_string):
         """Takes a player name string and returns a dict as:
-        {'first_name': <string>, 'middle_name': <string>, last_name': <string>}
+        {'first_name': <string>, last_name': <string>}
+        String argument excpected to follow the format:
+        'LastName, FirstName M' or 'LastName, FirstName'
+        first_name field includes middle name at the end.
         """
         name_dict = {}
-
-        # TODO(complete this)
+        # Split by comma. First name may include middle name.
+        name_array = name_string.split(',')
+        name_dict['first_name'] = name_array[1].strip()
+        name_dict['last_name'] = name_array[0].strip()
+        return name_dict 
 
     def __add_parings(self, game_id, player_id):
         """Receives a game_id and a dict with player ids,
