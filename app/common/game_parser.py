@@ -100,8 +100,17 @@ class GameParser:
         name_dict['last_name'] = name_array[0].strip()
         return name_dict 
 
-    def __add_parings(self, game_id, player_id):
+    def __add_parings(self, game_id, player_ids):
         """Receives a game_id and a dict with player ids,
         adds two pairings for white and black"""
 
+        black_pairing = models.Pairing(game_id=game_id,
+                                        player_id=player_ids['black'],
+                                        color='black')
+        white_pairing = models.Pairing(game_id=game_id, 
+                                        player_id = player_ids['white']
+                                        color='white')
+        db.session.add(black_pairing)
+        db.session.add(white_pairing)
+        db.session.commit()
         # TODO(complete this)
