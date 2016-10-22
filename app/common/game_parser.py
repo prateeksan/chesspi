@@ -113,4 +113,3 @@ class GameParser:
         db.session.add(black_pairing)
         db.session.add(white_pairing)
         db.session.commit()
-        # TODO(complete this)
