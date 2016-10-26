@@ -35,9 +35,19 @@ class GameParserTests(unittest.TestCase):
         """Test the add_games method after providing pgn_string"""
         gp = GameParser(pgn_string=SAMPLE_GAMES_STRING)
         gp.add_games()
+
+        players = models.Player.query.all()
+        players_added = len(players) == 4
+
+        games = models.Game.query.all()
+        games_added = len(games) == 3
+
+        pairings = models.Pairing.query.all()
+        pairings_added = len(pairings) == 3
+
         print('\n===========================================================')
         print("\nShould add 3 games to db along with players and pairings.\n")
-        assert True
+        assert players_added and games_added and pairings_added
 
 if __name__ == '__main__':
     unittest.main()
