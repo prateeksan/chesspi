@@ -18,8 +18,24 @@ class GameParser:
         """If GameParser initialized with game_id rather than string,
         this method should return the game as a pgn string or json as per return_type.
         Default return_type is json"""
-        # TODO(code this and write tests)
-        return None
+        if not self.game_id:
+            return None
+        game = models.Game.query.get(self.game_id)
+        players = game.players
+        pairing_1 = models.Pairing.query.filter_by(player_id=players[0].id,
+                                            game_id=game.id).first()
+        pairing_2 = models.Pairing.query.filter_by(player_id=players[1].id,
+                                            game_id=game.id).first()
+        if pairing_1.color == 'white':
+            white_player = players[0]
+            black_player = players[1]
+        elif pairing_2.color == 'white':
+            white_player = players[1]
+            black_player = players[0]
+
+        print('white: %s, %s'%(white_player.first_name, white_player.last_name))
+        print('black: %s, %s'%(black_player.first_name, black_player.last_name))
+
 
     def add_games(self):
         """If pgn was provided and parsed, adds games from pgn to the db"""
