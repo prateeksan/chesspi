@@ -43,7 +43,7 @@ class GameParserTests(unittest.TestCase):
         games_added = len(games) == 3
 
         pairings = models.Pairing.query.all()
-        pairings_added = len(pairings) == 3
+        pairings_added = len(pairings) == 6
 
         print('\n===========================================================')
         print("\nShould add 3 games to db along with players and pairings.\n")

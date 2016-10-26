@@ -37,7 +37,7 @@ class GameParser:
             player = self.__parse_player_name(player)
         player_in_db = models.Player.query.filter_by(
                         first_name=player['first_name'],
-                        last_name=player['first_name'])
+                        last_name=player['last_name'])
 
         if player_in_db.count() > 0:
             return player_in_db.first().id
@@ -89,8 +89,10 @@ class GameParser:
 
         db.session.commit()
 
-        white_id = db_white.id
-        black_id = db_black.id
+        if not white_id:
+            white_id = db_white.id
+        if not black_id:
+            black_id = db_black.id
 
         return {'white': white_id, 'black': black_id}
 
