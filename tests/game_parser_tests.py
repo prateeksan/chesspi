@@ -27,8 +27,17 @@ class GameParserTests(unittest.TestCase):
     def test_game_parser_init(self):
         """Test the __init__() function of GameParser"""
         gp = GameParser(pgn_string=SAMPLE_GAMES_STRING)
-        print("Should init GameParser with a pgn string containing 3 games")
+        print('\n===========================================================')
+        print("\nShould init GameParser with a pgn string containing 3 games.\n")
         assert len(gp.parsed_games) == 3
+
+    def test_add_games(self):
+        """Test the add_games method after providing pgn_string"""
+        gp = GameParser(pgn_string=SAMPLE_GAMES_STRING)
+        gp.add_games()
+        print('\n===========================================================')
+        print("\nShould add 3 games to db along with players and pairings.\n")
+        assert True
 
 if __name__ == '__main__':
     unittest.main()

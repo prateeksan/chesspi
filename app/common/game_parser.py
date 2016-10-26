@@ -26,7 +26,7 @@ class GameParser:
                 self.__add_pairings(game_id=db_game_id,
                                     player_ids=db_player_ids)
 
-    def player_in_db(player, stringified=False):
+    def player_in_db(self, player, stringified=False):
         """Takes a player name and checks if player in db
         If present, it returns the player id, else returns None.
         If player is stringified, it parses the name into a dict.
@@ -55,7 +55,7 @@ class GameParser:
                 result=game.result,
                 white_elo=game.whiteelo,
                 black_elo=game.blackelo,
-                moves=game.moves
+                moves=moves_string
             )
         db.session.add(db_game)
         db.session.commit()
@@ -100,7 +100,7 @@ class GameParser:
         name_dict['last_name'] = name_array[0].strip()
         return name_dict 
 
-    def __add_parings(self, game_id, player_ids):
+    def __add_pairings(self, game_id, player_ids):
         """Receives a game_id and a dict with player ids,
         adds two pairings for white and black"""
 
