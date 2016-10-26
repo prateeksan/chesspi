@@ -25,6 +25,7 @@ class GameParser:
                 db_game_id = self.__add_game(game)
                 self.__add_pairings(game_id=db_game_id,
                                     player_ids=db_player_ids)
+                db.session.expunge_all()
 
     def player_in_db(self, player, stringified=False):
         """Takes a player name and checks if player in db
@@ -55,7 +56,8 @@ class GameParser:
                 result=game.result,
                 white_elo=game.whiteelo,
                 black_elo=game.blackelo,
-                moves=moves_string
+                moves=moves_string,
+                eco = game.eco
             )
         db.session.add(db_game)
         db.session.commit()
@@ -76,12 +78,19 @@ class GameParser:
                     first_name= white_parsed['first_name'],
                     last_name = white_parsed['last_name']
                     )
+            db.session.add(db_white)
 
         if not black_id:
             db_black = models.Player(
                     first_name= black_parsed['first_name'],
                     last_name = black_parsed['last_name']
                     )
+            db.session.add(db_black)
+
+        db.session.commit()
+
+        white_id = db_white.id
+        black_id = db_black.id
 
         return {'white': white_id, 'black': black_id}
 
