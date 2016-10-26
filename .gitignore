@@ -3,4 +3,5 @@ __pycache__
 
 
 app.db
+test.db
 db_repository
