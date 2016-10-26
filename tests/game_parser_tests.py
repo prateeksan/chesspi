@@ -53,21 +53,24 @@ class GameParserTests(unittest.TestCase):
 
     def test_player_in_db(self):
         """Tests whether a player is added to db properly without duplicates.
-        And whether player_in_db can return its id"""
+        And whether player_in_db can return its id or None for no matches"""
         gp = GameParser(pgn_string=SAMPLE_GAMES_STRING)
         gp.add_games()
         test_player = {'first_name':'Gary', 'last_name':'Kasparov'}
+        false_player = {'first_name':'Gary', 'last_name':'Carlsen'}
         player_in_db = gp.player_in_db(test_player)
+        false_player_in_db = gp.player_in_db(false_player)
         test_player_count = models.Player.query.filter_by(first_name='Gary',
                                                             last_name='Kasparov').count()
 
         print('\n===========================================================')
         print("\nKasparov should be added to db only once.")
-        print("\nGameParser(games).player_in_db method should return Kasparov's index.")
+        print("\nGameParser(games).player_in_db method should return player id or None.")
         print('\n===========================================================\n')
         assert (player_in_db is not None and
                 isinstance(player_in_db, int) and
-                test_player_count == 1)
+                test_player_count == 1 and
+                not false_player_in_db)
 
 if __name__ == '__main__':
     unittest.main()
