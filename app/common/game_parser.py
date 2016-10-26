@@ -14,6 +14,13 @@ class GameParser:
         self.game_id = game_id
         self.parsed_games = pgn.loads(self.pgn) if self.pgn else None
 
+    def unparse_game(self, return_type='json'):
+        """If GameParser initialized with game_id rather than string,
+        this method should return the game as a pgn string or json as per return_type.
+        Default return_type is json"""
+        # TODO(code this and write tests)
+        return None
+
     def add_games(self):
         """If pgn was provided and parsed, adds games from pgn to the db"""
 
