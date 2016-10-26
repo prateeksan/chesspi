@@ -28,7 +28,8 @@ class GameParserTests(unittest.TestCase):
         """Test the __init__() function of GameParser"""
         gp = GameParser(pgn_string=SAMPLE_GAMES_STRING)
         print('\n===========================================================')
-        print("\nShould init GameParser with a pgn string containing 3 games.\n")
+        print("\nShould init GameParser with a pgn string containing 3 games.")
+        print('\n===========================================================\n')
         assert len(gp.parsed_games) == 3
 
     def test_add_games(self):
@@ -46,8 +47,27 @@ class GameParserTests(unittest.TestCase):
         pairings_added = len(pairings) == 6
 
         print('\n===========================================================')
-        print("\nShould add 3 games to db along with players and pairings.\n")
+        print("\nShould add 3 games to db along with players and pairings.")
+        print('\n===========================================================\n')
         assert players_added and games_added and pairings_added
+
+    def test_player_in_db(self):
+        """Tests whether a player is added to db properly without duplicates.
+        And whether player_in_db can return its id"""
+        gp = GameParser(pgn_string=SAMPLE_GAMES_STRING)
+        gp.add_games()
+        test_player = {'first_name':'Gary', 'last_name':'Kasparov'}
+        player_in_db = gp.player_in_db(test_player)
+        test_player_count = models.Player.query.filter_by(first_name='Gary',
+                                                            last_name='Kasparov').count()
+
+        print('\n===========================================================')
+        print("\nKasparov should be added to db only once.")
+        print("\nGameParser(games).player_in_db method should return Kasparov's index.")
+        print('\n===========================================================\n')
+        assert (player_in_db is not None and
+                isinstance(player_in_db, int) and
+                test_player_count == 1)
 
 if __name__ == '__main__':
     unittest.main()
