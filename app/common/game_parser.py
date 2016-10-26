@@ -6,11 +6,11 @@ class GameParser:
     Populate the Game table with parsed games.
     Unparse games and return them as pgns or strings."""
 
-    def __init__(self, pgn=None, game_id=None):
+    def __init__(self, pgn_string=None, game_id=None):
         """Init the GameParser either with a pgn string or with a game id.
         Game id should correspond with the Game.id in the database."""
 
-        self.pgn = pgn
+        self.pgn = pgn_string
         self.game_id = game_id
         self.parsed_games = pgn.loads(self.pgn) if self.pgn else None
 
@@ -18,7 +18,7 @@ class GameParser:
         """If pgn was provided and parsed, adds games from pgn to the db"""
 
         if self.parsed_games:
-            for game in parsed_games:
+            for game in self.parsed_games:
                 # Returns dict like: {white: <id>, black: <id>}
                 db_player_ids = self.__add_players(white=game.white, 
                                                     black=game.black)
@@ -108,7 +108,7 @@ class GameParser:
                                         player_id=player_ids['black'],
                                         color='black')
         white_pairing = models.Pairing(game_id=game_id, 
-                                        player_id = player_ids['white']
+                                        player_id = player_ids['white'],
                                         color='white')
         db.session.add(black_pairing)
         db.session.add(white_pairing)
