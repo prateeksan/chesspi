@@ -7,13 +7,16 @@ class GameParser:
     Populate the Game table with parsed games.
     Unparse games and return them as pgns or strings."""
 
-    def __init__(self, pgn_string=None, game_id=None):
+    def __init__(self, pgn_string=None, game_id=None, verbose=False):
         """Init the GameParser either with a pgn string or with a game id.
         Game id should correspond with the Game.id in the database."""
 
         self.pgn = pgn_string
         self.game_id = game_id
         self.parsed_games = pgn.loads(self.pgn) if self.pgn else None
+        self.verbose = verbose
+
+        self.__print("Parsed games, {} in total".format(len(self.parsed_games)))
 
     def unparse_game(self, return_type='pgn'):
         """If GameParser initialized with game_id rather than string,
@@ -65,6 +68,9 @@ class GameParser:
 
         if self.parsed_games:
             for game in self.parsed_games:
+
+                self.__print("Adding game {} vs {} {}".format(game.white, game.black, game.date))
+
                 # Returns dict like: {white: <id>, black: <id>}
                 db_player_ids = self.__add_players(white=game.white, 
                                                     black=game.black)
@@ -174,7 +180,7 @@ class GameParser:
         name_dict = {}
         # Split by comma. First name may include middle name.
         name_array = name_string.split(',')
-        name_dict['first_name'] = name_array[1].strip()
+        name_dict['first_name'] = name_array[1].strip() if len(name_array) > 1 else ''
         name_dict['last_name'] = name_array[0].strip()
         return name_dict 
 
@@ -191,3 +197,9 @@ class GameParser:
         db.session.add(black_pairing)
         db.session.add(white_pairing)
         db.session.commit()
+
+    def __print(self, output):
+        """Print output if verbose is set to True"""
+
+        if self.verbose:
+            print(output)
