@@ -16,13 +16,17 @@ class GameParser:
         self.parsed_games = pgn.loads(self.pgn) if self.pgn else None
         self.verbose = verbose
 
-        self.__print("Parsed games, {} in total".format(len(self.parsed_games)))
+        if not self.parsed_games:
+            self.__print("Parsed games, 0 in total.")
+        else:
+            self.__print("Parsed games, {} in total".format(len(self.parsed_games)))
 
     def unparse_game(self, return_type='pgn'):
         """If GameParser initialized with game_id rather than string,
         this method should return the game as a pgn string or dict as per return_type.
         Default return_type is pgn"""
         if not self.game_id:
+            print('No Game Id Provided')
             return None
         game = models.Game.query.get(self.game_id)
         players = self.__unparse_players_with_color(players=game.players, 
