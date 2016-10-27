@@ -1,4 +1,5 @@
 import pgn
+import json
 from app import db, models
 
 class GameParser:
@@ -15,14 +16,56 @@ class GameParser:
         self.parsed_games = pgn.loads(self.pgn) if self.pgn else None
         self.verbose = verbose
 
-        self.__print("Parsed games, {} in total".format(len(self.parsed_games)))
+        if not self.parsed_games:
+            self.__print("Parsed games, 0 in total.")
+        else:
+            self.__print("Parsed games, {} in total".format(len(self.parsed_games)))
 
-    def unparse_game(self, return_type='json'):
+    def unparse_game(self, return_type='pgn'):
         """If GameParser initialized with game_id rather than string,
-        this method should return the game as a pgn string or json as per return_type.
-        Default return_type is json"""
-        # TODO(code this and write tests)
-        return None
+        this method should return the game as a pgn string or dict as per return_type.
+        Default return_type is pgn"""
+        if not self.game_id:
+            print('No Game Id Provided')
+            return None
+        game = models.Game.query.get(self.game_id)
+        players = self.__unparse_players_with_color(players=game.players, 
+                                                    game_id=game.id)
+        # Preparing the game object for a pgn dumps
+        game.white = self.__stringify_player(players['white'])
+        game.black = self.__stringify_player(players['black'])
+        if return_type == 'dict':
+            game_dict = {}
+            game_dict['event'] = game.event
+            game_dict['site'] = game.site
+            game_dict['date'] = game.date
+            game_dict['round'] = game.match_round
+            game_dict['white_elo'] = game.white_elo
+            game_dict['black_elo'] = game.black_elo
+            game_dict['white'] = game.white
+            game_dict['black'] = game.black
+            game_dict['moves'] = game.moves
+            game_dict['eco'] = game.eco
+            return_obj = game_dict
+            db.session.expunge_all()
+            return return_obj
+        else:
+            game.moves = game.moves.split(',')
+            game.round = game.match_round
+            game.whiteelo = game.white_elo
+            game.blackelo = game.black_elo
+            # Fields not in our db but required by pgn (parser)
+            game.annotator = ''
+            game.plycount = ''
+            game.timecontrol = ''
+            game.time = ''
+            game.termination = ''
+            game.mode = ''
+            game.fen = ''
+            pgn_game = pgn.dumps(game)
+            db.session.expunge_all()
+            return pgn_game
+
 
     def add_games(self):
         """If pgn was provided and parsed, adds games from pgn to the db"""
@@ -56,6 +99,27 @@ class GameParser:
             return player_in_db.first().id
         else:
             return None
+
+    def __unparse_players_with_color(self, players, game_id):
+        """Takes an array of db Player objects and the game_id.
+        Returns players with colors in the game"""
+
+        players_obj = {}
+        pairing_1 = models.Pairing.query.filter_by(player_id=players[0].id,
+                                            game_id=game_id).first()
+        pairing_2 = models.Pairing.query.filter_by(player_id=players[1].id,
+                                            game_id=game_id).first()
+        if pairing_1.color == 'white':
+            players_obj['white'] = players[0]
+            players_obj['black'] = players[1]
+        elif pairing_2.color == 'white':
+            players_obj['white'] = players[1]
+            players_obj['black'] = players[0]
+
+        return players_obj
+
+    def __stringify_player(self, player):
+        return '%s, %s'%(player.first_name, player.last_name)
 
     def __add_game(self, game):
         """Takes a single game object and adds it to the Game table in the db"""
