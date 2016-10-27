@@ -21,21 +21,10 @@ class GameParser:
         if not self.game_id:
             return None
         game = models.Game.query.get(self.game_id)
-        players = game.players
-        pairing_1 = models.Pairing.query.filter_by(player_id=players[0].id,
-                                            game_id=game.id).first()
-        pairing_2 = models.Pairing.query.filter_by(player_id=players[1].id,
-                                            game_id=game.id).first()
-        if pairing_1.color == 'white':
-            white_player = players[0]
-            black_player = players[1]
-        elif pairing_2.color == 'white':
-            white_player = players[1]
-            black_player = players[0]
-
-        print('white: %s, %s'%(white_player.first_name, white_player.last_name))
-        print('black: %s, %s'%(black_player.first_name, black_player.last_name))
-
+        players = self.__unparse_players_with_color(players=game.players, 
+                                                    game_id=game.id)
+        print('white: ' + self.__stringify_player(players['white']))
+        print('black: ' + self.__stringify_player(players['black']))
 
     def add_games(self):
         """If pgn was provided and parsed, adds games from pgn to the db"""
@@ -66,6 +55,27 @@ class GameParser:
             return player_in_db.first().id
         else:
             return None
+
+    def __unparse_players_with_color(self, players, game_id):
+        """Takes an array of db Player objects and the game_id.
+        Returns players with colors in the game"""
+
+        players_obj = {}
+        pairing_1 = models.Pairing.query.filter_by(player_id=players[0].id,
+                                            game_id=game_id).first()
+        pairing_2 = models.Pairing.query.filter_by(player_id=players[1].id,
+                                            game_id=game_id).first()
+        if pairing_1.color == 'white':
+            players_obj['white'] = players[0]
+            players_obj['black'] = players[1]
+        elif pairing_2.color == 'white':
+            players_obj['white'] = players[1]
+            players_obj['black'] = players[0]
+
+        return players_obj
+
+    def __stringify_player(self, player):
+        return '%s, %s'%(player.first_name, player.last_name)
 
     def __add_game(self, game):
         """Takes a single game object and adds it to the Game table in the db"""
