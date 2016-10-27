@@ -1,4 +1,5 @@
 import pgn
+import json
 from app import db, models
 
 class GameParser:
@@ -14,17 +15,50 @@ class GameParser:
         self.game_id = game_id
         self.parsed_games = pgn.loads(self.pgn) if self.pgn else None
 
-    def unparse_game(self, return_type='json'):
+    def unparse_game(self, return_type='pgn'):
         """If GameParser initialized with game_id rather than string,
-        this method should return the game as a pgn string or json as per return_type.
-        Default return_type is json"""
+        this method should return the game as a pgn string or dict as per return_type.
+        Default return_type is pgn"""
         if not self.game_id:
             return None
         game = models.Game.query.get(self.game_id)
         players = self.__unparse_players_with_color(players=game.players, 
                                                     game_id=game.id)
-        print('white: ' + self.__stringify_player(players['white']))
-        print('black: ' + self.__stringify_player(players['black']))
+        # Preparing the game object for a pgn dumps
+        game.white = self.__stringify_player(players['white'])
+        game.black = self.__stringify_player(players['black'])
+        if return_type == 'dict':
+            game_dict = {}
+            game_dict['event'] = game.event
+            game_dict['site'] = game.site
+            game_dict['date'] = game.date
+            game_dict['round'] = game.match_round
+            game_dict['white_elo'] = game.white_elo
+            game_dict['black_elo'] = game.black_elo
+            game_dict['white'] = game.white
+            game_dict['black'] = game.black
+            game_dict['moves'] = game.moves
+            game_dict['eco'] = game.eco
+            return_obj = game_dict
+            db.session.expunge_all()
+            return return_obj
+        else:
+            game.moves = game.moves.split(',')
+            game.round = game.match_round
+            game.whiteelo = game.white_elo
+            game.blackelo = game.black_elo
+            # Fields not in our db but required by pgn (parser)
+            game.annotator = ''
+            game.plycount = ''
+            game.timecontrol = ''
+            game.time = ''
+            game.termination = ''
+            game.mode = ''
+            game.fen = ''
+            pgn_game = pgn.dumps(game)
+            db.session.expunge_all()
+            return pgn_game
+
 
     def add_games(self):
         """If pgn was provided and parsed, adds games from pgn to the db"""
