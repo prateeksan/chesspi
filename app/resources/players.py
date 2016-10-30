@@ -2,7 +2,6 @@ from flask_restful import Resource, fields, marshal, reqparse
 import pgn
 
 # Import games list
-from app import games
 from app import models
 
 # Set up request fields

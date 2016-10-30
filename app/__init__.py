@@ -13,7 +13,6 @@ db = SQLAlchemy(app)
 limiter = Limiter(app, key_func=get_remote_address)
 
 # import models
-from app.common.pseudo_models import games
 from app.common import models
 
 # import resources
