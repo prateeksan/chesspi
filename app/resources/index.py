@@ -18,8 +18,8 @@ class Index(Resource):
                     'description': 'Show game with id 16 in pgn format'
                 },
                 {
-                    'url': '/games?name=anand',
-                    'description': 'Show games played by Anand'
+                    'url': '/games?name=chandler',
+                    'description': 'Show games played by Chandler'
                 },
                 {
                     'url': '/games?eco=b22',
@@ -32,6 +32,14 @@ class Index(Resource):
                 {
                     'url': '/players',
                     'description': 'List of all players in DB'
+                },
+                {
+                    'url': '/players/5',
+                    'description': 'List player with id=5'
+                },
+                {
+                    'url': '/players?name=chandler',
+                    'description': 'List of all players with name=chandler'
                 },
                 {
                     'url': '/eco_codes',
