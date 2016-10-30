@@ -97,11 +97,9 @@ class GameParser:
         """Return all games from DB as models"""
         games = models.Game.query.all()
         if any(request_args):
-            print('args are {}'.format(request_args))
-            filtered_games = filter(lambda g: self.__game_match(g, request_args), games)
-            return filtered_games
-        else:
-            return games
+            games = list(filter(lambda g: self.__game_match(g, request_args), games))
+        
+        return games
 
     def get_game(self, id=1):
         """TODO(Returns a single game from DB as a model)"""
