@@ -29,12 +29,19 @@ class GameParser:
             print('No Game Id Provided')
             return None
         game = models.Game.query.get(self.game_id)
+
+        return self.format_game(game, return_type=return_type)
+
+    def format_game(self, game, return_type='pgn'):
+        """Formats a game model into a pgn or dictionary"""
+
         players = self.__unparse_players_with_color(players=game.players, 
                                                     game_id=game.id)
         # Preparing the game object for a pgn dumps
-        game.white = self.__stringify_player(players['white'])
-        game.black = self.__stringify_player(players['black'])
-        if return_type == 'dict':
+        game.white = players['white'].full_name()
+        game.black = players['black'].full_name()
+
+        if return_type in ('dict', 'json'):
             game_dict = {}
             game_dict['event'] = game.event
             game_dict['site'] = game.site
@@ -66,6 +73,9 @@ class GameParser:
             db.session.expunge_all()
             return pgn_game
 
+    def format_games(self, games, return_type='pgn'):
+        """Returns a list of games formatted either in a dictionary or pgn"""
+        return [self.format_game(game, return_type=return_type) for game in games]
 
     def add_games(self):
         """If pgn was provided and parsed, adds games from pgn to the db"""
@@ -82,6 +92,18 @@ class GameParser:
                 self.__add_pairings(game_id=db_game_id,
                                     player_ids=db_player_ids)
                 db.session.expunge_all()
+
+    def get_games(self, request_args={}):
+        """Return all games from DB as models"""
+        games = models.Game.query.all()
+        if any(request_args):
+            games = list(filter(lambda g: self.__game_match(g, request_args), games))
+        
+        return games
+
+    def get_game(self, id=1):
+        """TODO(Returns a single game from DB as a model)"""
+        return models.Game.query.get(id)
 
     def player_in_db(self, player, stringified=False):
         """Takes a player name and checks if player in db
@@ -117,9 +139,6 @@ class GameParser:
             players_obj['black'] = players[0]
 
         return players_obj
-
-    def __stringify_player(self, player):
-        return '%s, %s'%(player.first_name, player.last_name)
 
     def __add_game(self, game):
         """Takes a single game object and adds it to the Game table in the db"""
@@ -201,6 +220,23 @@ class GameParser:
         db.session.add(black_pairing)
         db.session.add(white_pairing)
         db.session.commit()
+
+    def __game_match(self, game, request_args):
+        """Match games based on filters defined in games.py"""
+        if 'name' in request_args:
+            players = self.__unparse_players_with_color(
+                players=game.players,
+                game_id=game.id)
+
+            if request_args['name'] not in players['white'].full_name().lower() and \
+                request_args['name'] not in players['black'].full_name().lower():
+                return False
+
+        if 'eco' in request_args:
+            if request_args['eco'] != game.eco.lower():
+                return False
+
+        return True
 
     def __print(self, output):
         """Print output if verbose is set to True"""

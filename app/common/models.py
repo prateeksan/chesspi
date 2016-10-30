@@ -33,7 +33,7 @@ class Game(db.Model):
     eco = db.Column(db.String(32))
     # TODO(limit text size for moves, sqlite3 can't do this so it needs to be done manually)
     moves = db.Column(db.Text())
-    players = db.relationship('Player', secondary='pairings', backref='game')
+    players = db.relationship('Player', secondary='pairings', backref='game', lazy='joined')
     # TODO(add a sensible unique constraint)
     def __repr__(self):
         return '<Game %r>' % (self.id)
@@ -50,4 +50,7 @@ class Player(db.Model):
     games = db.relationship('Game', secondary='pairings', backref='player')
 
     def __repr__(self):
-      return '<Player %r, %r %r>' % (self.last_name, self.first_name, self.middle_name)
+        return '<Player %r, %r %r>' % (self.last_name, self.first_name, self.middle_name)
+
+    def full_name(self):
+        return '{}, {}'.format(self.first_name, self.last_name)
