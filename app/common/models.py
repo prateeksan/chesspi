@@ -50,4 +50,7 @@ class Player(db.Model):
     games = db.relationship('Game', secondary='pairings', backref='player')
 
     def __repr__(self):
-      return '<Player %r, %r %r>' % (self.last_name, self.first_name, self.middle_name)
+        return '<Player %r, %r %r>' % (self.last_name, self.first_name, self.middle_name)
+
+    def full_name(self):
+        return '{}, {}'.format(self.first_name, self.last_name)

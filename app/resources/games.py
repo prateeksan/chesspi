@@ -1,6 +1,9 @@
 from flask_restful import Resource, abort, reqparse, fields, marshal
 import pgn
 
+# Import app modules:
+from app.common.game_parser import GameParser
+
 # Import games list
 from app import games
 from app import limiter
@@ -52,13 +55,10 @@ class GameList(Resource):
     def get(self):
         args = parser.parse_args()
 
-        # Check for filters, if none return whole list
-        if any(args):
-            filtered_games = filter(lambda g: game_match(g, args), games)
-        else:
-            filtered_games = games
+        games_parser = GameParser()
+        games = games_parser.get_games(args)
 
-        return [format_pgn(game, args['format']) for game in filtered_games]
+        return games_parser.format_games(games, return_type=args['format'])
 
 # Format pgn object to dictionary
 def format_pgn(game, output_format):
@@ -73,13 +73,3 @@ def abort_if_game_doesnt_exist(game_id):
     #Can be changed based on how games are retrieved
     if game_id > len(games) -1:
         abort(404, message="Game {} doesn't exist".format(game_id))
-
-def game_match(game, args):
-    if 'name' in args:
-        if args['name'] not in game.black.lower() and \
-           args['name'] not in game.white.lower():
-            return False
-    if 'eco' in args:
-        if args['eco'] != game.eco.lower():
-            return False
-    return True
