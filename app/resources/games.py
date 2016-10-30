@@ -45,8 +45,14 @@ class Game(Resource):
     def get(self, game_id):
         args = parser.parse_args()
         game_id = int(game_id)
-        abort_if_game_doesnt_exist(game_id)
-        return format_pgn(games[game_id], args['format'])
+
+        game_parser = GameParser()
+        game = game_parser.get_game(game_id)
+
+        if game is None:
+            abort(404, message="Game {} doesn't exist".format(game_id))
+
+        return game_parser.format_game(game, return_type=args['format'])
 
 # GameList
 # Shows a list of all games
@@ -55,10 +61,10 @@ class GameList(Resource):
     def get(self):
         args = parser.parse_args()
 
-        games_parser = GameParser()
-        games = games_parser.get_games(args)
+        game_parser = GameParser()
+        games = game_parser.get_games(args)
 
-        return games_parser.format_games(games, return_type=args['format'])
+        return game_parser.format_games(games, return_type=args['format'])
 
 # Format pgn object to dictionary
 def format_pgn(game, output_format):

@@ -105,6 +105,7 @@ class GameParser:
 
     def get_game(self, id=1):
         """TODO(Returns a single game from DB as a model)"""
+        return models.Game.query.get(id)
 
     def player_in_db(self, player, stringified=False):
         """Takes a player name and checks if player in db
