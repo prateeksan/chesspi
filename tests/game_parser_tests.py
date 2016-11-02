@@ -74,8 +74,8 @@ class GameParserTests(unittest.TestCase):
 
     def test_unparse_game(self):
         """Tests whether unparse_game can query the db for a game and
-        return it in the correct format. Also tests if it can return None 
-        when no ID provided."""
+        return it in the correct format (see format_game tests for more semantics). 
+        Also tests if it can return None when no ID provided."""
         gp = GameParser(pgn_string=SAMPLE_GAMES_STRING)
         gp.add_games()
         # Should return None
