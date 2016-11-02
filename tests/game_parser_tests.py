@@ -73,7 +73,9 @@ class GameParserTests(unittest.TestCase):
                 not false_player_in_db)
 
     def test_unparse_game(self):
-        """Docstring here"""
+        """Tests whether unparse_game can query the db for a game and
+        return it in the correct format. Also tests if it can return None 
+        when no ID provided."""
         gp = GameParser(pgn_string=SAMPLE_GAMES_STRING)
         gp.add_games()
         # Should return None
