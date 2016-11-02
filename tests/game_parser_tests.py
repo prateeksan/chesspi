@@ -82,14 +82,13 @@ class GameParserTests(unittest.TestCase):
         gp2 = GameParser(game_id=1)
         test_with_id = gp2.unparse_game(return_type='dict')
 
-        assert (test_with_id and not 
-                test_no_id and
-                test_with_id['eco'] == 'B22')
         print('\n===========================================================')
         print("\nMethod unparse_game should return None if no id provided.")
         print("\nIt should return a game in chosen format when provided a valid id")
         print('\n===========================================================\n')
- 
+        assert (test_with_id and not 
+                test_no_id and
+                test_with_id['eco'] == 'B22')
 
     def test_format_game(self):
         """Docstring here"""
