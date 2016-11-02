@@ -18,14 +18,16 @@ Features include:
 /games                  # List of all games in the DB
 /games/16               # Show game with id 16
 /games/16?format=pgn    # Show game with id 16 in pgn format
-/games?name=anand       # Filter games played by Anand
+/games?name=chandler    # Filter games played by Chandler
 /games?eco=b22          # Filter games opening with ECO B22
 ```
 
 **/players**
 
 ```
-/players      # List of all players in DB
+/players                # List of all players in DB
+/players/1              # List player with id=1
+/players?name=chandler  # List players with name=chandler
 ```
 
 **/eco_codes**
