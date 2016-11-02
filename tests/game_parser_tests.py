@@ -74,6 +74,22 @@ class GameParserTests(unittest.TestCase):
 
     def test_unparse_game(self):
         """Docstring here"""
+        gp = GameParser(pgn_string=SAMPLE_GAMES_STRING)
+        gp.add_games()
+        # Should return None
+        test_no_id = gp.unparse_game()
+
+        gp2 = GameParser(game_id=1)
+        test_with_id = gp2.unparse_game(return_type='dict')
+
+        assert (test_with_id and not 
+                test_no_id and
+                test_with_id['eco'] == 'B22')
+        print('\n===========================================================')
+        print("\nMethod unparse_game should return None if no id provided.")
+        print("\nIt should return a game in chosen format when provided a valid id")
+        print('\n===========================================================\n')
+ 
 
     def test_format_game(self):
         """Docstring here"""
