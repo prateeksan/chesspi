@@ -72,5 +72,20 @@ class GameParserTests(unittest.TestCase):
                 test_player_count == 1 and
                 not false_player_in_db)
 
+    def test_unparse_game(self):
+        """Docstring here"""
+
+    def test_format_game(self):
+        """Docstring here"""
+
+    def test_format_games(self):
+        """Docstring here"""
+
+    def test_get_games(self):
+        """Docstring here"""
+
+    def test_get_game(self):
+        """Docstring here"""
+
 if __name__ == '__main__':
     unittest.main()
