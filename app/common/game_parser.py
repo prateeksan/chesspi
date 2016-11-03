@@ -233,7 +233,7 @@ class GameParser:
                 return False
 
         if 'eco' in request_args:
-            if request_args['eco'] != game.eco.lower():
+            if request_args['eco'].lower() != game.eco.lower():
                 return False
 
         return True

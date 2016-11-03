@@ -2,6 +2,7 @@
 import os
 import unittest
 import sys
+import pgn
 # Set path to parent directory
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -71,6 +72,95 @@ class GameParserTests(unittest.TestCase):
                 isinstance(player_in_db, int) and
                 test_player_count == 1 and
                 not false_player_in_db)
+
+    def test_unparse_game(self):
+        """Tests whether unparse_game can query the db for a game and
+        return it in the correct format (see format_game tests for more semantics). 
+        Also tests if it can return None when no ID provided."""
+        gp = GameParser(pgn_string=SAMPLE_GAMES_STRING)
+        gp.add_games()
+        # Should return None
+        test_no_id = gp.unparse_game()
+
+        gp2 = GameParser(game_id=1)
+        test_with_id = gp2.unparse_game(return_type='dict')
+
+        print('\n===========================================================')
+        print("\nMethod unparse_game should return None if no id provided.")
+        print("\nIt should return a game in chosen format when provided a valid id")
+        print('\n===========================================================\n')
+        assert (test_with_id and not 
+                test_no_id and
+                test_with_id['eco'] == 'B22')
+
+    def test_format_game(self):
+        """Method format_game should return games in specified format.
+        It should return a pgn string if format not specified."""
+        gp = GameParser(pgn_string=SAMPLE_GAMES_STRING)
+        gp.add_games()
+        game_1 = models.Game.query.get(1)
+        # Return type 'dict' and 'json' can be used interchangably
+        # 'dict' has been tested in unparse_games test
+        game_dict = gp.format_game(game_1, return_type='json')
+        dict_check = (game_dict['event'] == 'Wch U16' and
+                    game_dict['site'] == 'Wattignies' and
+                    game_dict['white'] == 'Chandler, Murray G' and
+                    game_dict['black'] == 'Kasparov, Gary')
+        # format_game should return pgn by default
+        game_pgn = gp.format_game(game_1)
+        # Loads an array of games
+        loaded_pgn = pgn.loads(game_pgn)
+        pgn_check = (isinstance(game_pgn, str) and
+                    len(loaded_pgn) == 1 and
+                    loaded_pgn[0].event == 'Wch U16' and
+                    loaded_pgn[0].site == 'Wattignies')
+        print('\n===========================================================')
+        print("\nMethod format_game should return games in specified format.")
+        print("\nIt should return a pgn string if format not specified")
+        print('\n===========================================================\n')
+        assert (dict_check and pgn_check)
+
+    def test_format_games(self):
+        """Returns a list of formatted games in given return type"""
+        gp = GameParser(pgn_string=SAMPLE_GAMES_STRING)
+        gp.add_games()
+        games = models.Game.query.all()
+        # Should return list of pgn strings by default
+        formatted_games = gp.format_games(games)
+        print('\n===========================================================')
+        print("\nShould return a list of formatted games in given return type.")
+        print('\n===========================================================\n')
+        assert (len(games) == len(formatted_games) and 
+                isinstance(formatted_games[0], str))
+
+    def test_get_games(self):
+        """Returns a list of Game models. 
+        Filters by request_args if provided (name/eco only)"""
+        gp = GameParser(pgn_string=SAMPLE_GAMES_STRING)
+        gp.add_games()
+        games = gp.get_games()
+        # Only one game in the seed has this eco
+        games_with_arg = gp.get_games(request_args={'eco': 'B22'})
+        print('\n===========================================================')
+        print("\nShould return a list of game models. Filtered by args if provided (name/eco)")
+        print('\n===========================================================\n')
+        assert (len(games) == 3 and len(games_with_arg) == 1 and
+                games_with_arg[0].eco == games[0].eco == 'B22')
+
+    def test_get_game(self):
+        """Returns a single game from db based on id.
+        Returns game 1 by default"""
+        gp = GameParser(pgn_string=SAMPLE_GAMES_STRING)
+        gp.add_games()
+        test_with_id = gp.get_game(2)
+        test_default = gp.get_game()
+        print('\n===========================================================')
+        print("\nShould return a single game from db based on id. Returns game 1 by default")
+        print('\n===========================================================\n')
+        assert (test_with_id and test_default and
+                test_with_id.eco == 'C11' and
+                test_default.id == 1 and
+                test_default.eco == 'B22')
 
 if __name__ == '__main__':
     unittest.main()

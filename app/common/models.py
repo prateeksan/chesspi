@@ -53,4 +53,4 @@ class Player(db.Model):
         return '<Player %r, %r %r>' % (self.last_name, self.first_name, self.middle_name)
 
     def full_name(self):
-        return '{}, {}'.format(self.first_name, self.last_name)
+        return '{}, {}'.format(self.last_name, self.first_name)
