@@ -121,7 +121,17 @@ class GameParserTests(unittest.TestCase):
         assert (dict_check and pgn_check)
 
     def test_format_games(self):
-        """Docstring here"""
+        """Returns a list of formatted games in given return type"""
+        gp = GameParser(pgn_string=SAMPLE_GAMES_STRING)
+        gp.add_games()
+        games = models.Game.query.all()
+        # Should return list of pgn strings by default
+        formatted_games = gp.format_games(games)
+        print('\n===========================================================')
+        print("\nReturns a list of formatted games in given return type.")
+        print('\n===========================================================\n')
+        assert (len(games) == len(formatted_games) and 
+                isinstance(formatted_games[0], str))
 
     def test_get_games(self):
         """Docstring here"""
