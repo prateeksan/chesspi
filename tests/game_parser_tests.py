@@ -137,7 +137,19 @@ class GameParserTests(unittest.TestCase):
         """Docstring here"""
 
     def test_get_game(self):
-        """Docstring here"""
+        """Returns a single game from db based on id.
+        Returns game 1 by default"""
+        gp = GameParser(pgn_string=SAMPLE_GAMES_STRING)
+        gp.add_games()
+        test_with_id = gp.get_game(2)
+        test_default = gp.get_game()
+        print('\n===========================================================')
+        print("\nReturns a single game from db based on id. Returns game 1 by default")
+        print('\n===========================================================\n')
+        assert (test_with_id and test_default and
+                test_with_id.eco == 'C11' and
+                test_default.id == 1 and
+                test_default.eco == 'B22')
 
 if __name__ == '__main__':
     unittest.main()
