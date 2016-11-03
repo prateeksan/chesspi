@@ -128,7 +128,7 @@ class GameParserTests(unittest.TestCase):
         # Should return list of pgn strings by default
         formatted_games = gp.format_games(games)
         print('\n===========================================================')
-        print("\nReturns a list of formatted games in given return type.")
+        print("\nShould return a list of formatted games in given return type.")
         print('\n===========================================================\n')
         assert (len(games) == len(formatted_games) and 
                 isinstance(formatted_games[0], str))
@@ -144,7 +144,7 @@ class GameParserTests(unittest.TestCase):
         test_with_id = gp.get_game(2)
         test_default = gp.get_game()
         print('\n===========================================================')
-        print("\nReturns a single game from db based on id. Returns game 1 by default")
+        print("\nShould return a single game from db based on id. Returns game 1 by default")
         print('\n===========================================================\n')
         assert (test_with_id and test_default and
                 test_with_id.eco == 'C11' and
