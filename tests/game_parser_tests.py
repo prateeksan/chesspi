@@ -142,7 +142,7 @@ class GameParserTests(unittest.TestCase):
         # Only one game in the seed has this eco
         games_with_arg = gp.get_games(request_args={'eco': 'B22'})
         print('\n===========================================================')
-        print("\nShould return a list of game models. Filtered by args if provided")
+        print("\nShould return a list of game models. Filtered by args if provided (name/eco)")
         print('\n===========================================================\n')
         assert (len(games) == 3 and len(games_with_arg) == 1 and
                 games_with_arg[0].eco == games[0].eco == 'B22')
