@@ -2,6 +2,7 @@
 import os
 import unittest
 import sys
+import pgn
 # Set path to parent directory
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -93,7 +94,31 @@ class GameParserTests(unittest.TestCase):
                 test_with_id['eco'] == 'B22')
 
     def test_format_game(self):
-        """Docstring here"""
+        """Method format_game should return games in specified format.
+        It should return a pgn string if format not specified."""
+        gp = GameParser(pgn_string=SAMPLE_GAMES_STRING)
+        gp.add_games()
+        game_1 = models.Game.query.get(1)
+        # Return type 'dict' and 'json' can be used interchangably
+        # 'dict' has been tested in unparse_games test
+        game_dict = gp.format_game(game_1, return_type='json')
+        dict_check = (game_dict['event'] == 'Wch U16' and
+                    game_dict['site'] == 'Wattignies' and
+                    game_dict['white'] == 'Chandler, Murray G' and
+                    game_dict['black'] == 'Kasparov, Gary')
+        # format_game should return pgn by default
+        game_pgn = gp.format_game(game_1)
+        # Loads an array of games
+        loaded_pgn = pgn.loads(game_pgn)
+        pgn_check = (isinstance(game_pgn, str) and
+                    len(loaded_pgn) == 1 and
+                    loaded_pgn[0].event == 'Wch U16' and
+                    loaded_pgn[0].site == 'Wattignies')
+        print('\n===========================================================')
+        print("\nMethod format_game should return games in specified format.")
+        print("\nIt should return a pgn string if format not specified")
+        print('\n===========================================================\n')
+        assert (dict_check and pgn_check)
 
     def test_format_games(self):
         """Docstring here"""
