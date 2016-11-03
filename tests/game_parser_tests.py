@@ -145,7 +145,7 @@ class GameParserTests(unittest.TestCase):
         print("\nShould return a list of game models. Filtered by args if provided")
         print('\n===========================================================\n')
         assert (len(games) == 3 and len(games_with_arg) == 1 and
-                games_with_arg.eco == games[0].eco == 'B22')
+                games_with_arg[0].eco == games[0].eco == 'B22')
 
     def test_get_game(self):
         """Returns a single game from db based on id.
