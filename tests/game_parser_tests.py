@@ -134,7 +134,18 @@ class GameParserTests(unittest.TestCase):
                 isinstance(formatted_games[0], str))
 
     def test_get_games(self):
-        """Docstring here"""
+        """Returns a list of Game models. 
+        Filters by request_args if provided (name/eco only)"""
+        gp = GameParser(pgn_string=SAMPLE_GAMES_STRING)
+        gp.add_games()
+        games = gp.get_games()
+        # Only one game in the seed has this eco
+        games_with_arg = gp.get_games(request_args={'eco': 'B22'})
+        print('\n===========================================================')
+        print("\nShould return a list of game models. Filtered by args if provided")
+        print('\n===========================================================\n')
+        assert (len(games) == 3 and len(games_with_arg) == 1 and
+                games_with_arg.eco == games[0].eco == 'B22')
 
     def test_get_game(self):
         """Returns a single game from db based on id.
