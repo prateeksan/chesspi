@@ -53,5 +53,14 @@ class ModelTests(unittest.TestCase):
     def test_player_full_name(self):
       """Test Player.full_name method"""
 
+    def test_create_pairing(self):
+      """Create a pairing entry in db"""
+
+    def test_pairing_backrefs(self):
+      """Check backrefs for both Player and Game in a pairing"""
+
+    def test_delete_pairing(self):
+      """Delete a pairing from the db"""
+
   if __name__ == '__main__':
     unittest.main()
