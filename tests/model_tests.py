@@ -38,5 +38,20 @@ class ModelTests(unittest.TestCase):
     def test_delete_game(self):
       """Delete game entry from db with game id"""
 
+    def test_create_player(self):
+      """Create a player entry in db"""
+
+    def test_read_player(self):
+      """Query a player by id and read its fields"""
+
+    def test_update_player(self):
+      """Update fields of a player in db"""
+
+    def test_delete_player(self):
+      """Delete player entry from db with game id"""
+
+    def test_player_full_name(self):
+      """Test Player.full_name method"""
+
   if __name__ == '__main__':
     unittest.main()
