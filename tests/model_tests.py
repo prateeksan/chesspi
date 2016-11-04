@@ -26,5 +26,17 @@ class ModelTests(unittest.TestCase):
         db.session.remove()
         db.drop_all()
 
+    def test_create_game(self):
+      """Create a Game entry in db"""
+
+    def test_read_game(self):
+      """Query a game by id and read its fields"""
+
+    def test_update_game(self):
+      """Update fields of a game in db"""
+
+    def test_delete_game(self):
+      """Delete game entry from db with game id"""
+
   if __name__ == '__main__':
     unittest.main()
