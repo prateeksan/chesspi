@@ -13,7 +13,6 @@ from app import app, db
 from app import models
 
 SAMPLE_GAMES = pgn.loads(SAMPLE_GAMES_STRING)
-print(SAMPLE_GAMES)
 
 class ModelTests(unittest.TestCase):
   """This class tests all models"""
