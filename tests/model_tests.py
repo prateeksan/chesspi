@@ -14,7 +14,7 @@ from app import models
 
 class ModelTests(unittest.TestCase):
   """This class tests all models"""
-  
+
     def setUp(self):
         app.config['TESTING'] = True
         app.config['WTF_CSRF_ENABLED'] = False
@@ -25,3 +25,6 @@ class ModelTests(unittest.TestCase):
     def tearDown(self):
         db.session.remove()
         db.drop_all()
+
+  if __name__ == '__main__':
+    unittest.main()
