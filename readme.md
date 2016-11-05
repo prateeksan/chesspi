@@ -67,8 +67,8 @@ See requirements.txt
 
 Run the following commands from ChessPi root:
 
-+ `$ python tests/game_parser_tests.py`
-+ `$ python tests/model_tests.py`
++ `python tests/game_parser_tests.py`
++ `python tests/model_tests.py`
 
 All tests should pass.
 
