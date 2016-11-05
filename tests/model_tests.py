@@ -75,6 +75,8 @@ class ModelTests(unittest.TestCase):
 
   def test_create_player(self):
     """Create a player entry in db"""
+    player = self.__create_test_player()
+    assert player == models.Player.query.get(1)
 
   def test_read_player(self):
     """Query a player by id and read its fields"""
@@ -113,6 +115,17 @@ class ModelTests(unittest.TestCase):
     db.session.add(game)
     db.session.commit()
     return game
+
+  def __create_test_player(self):
+    """Creates a test player in db"""
+    player = models.Player(
+      first_name='Magnus',
+      middle_name='M',
+      last_name='Carlsen'
+      )
+    db.session.add(player)
+    db.session.commit()
+    return player
 
 if __name__ == '__main__':
   unittest.main()
