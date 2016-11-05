@@ -63,11 +63,14 @@ See requirements.txt
 3. Run `python db_migrate`
 4. Launch the server `python runserver.py`
 
-## Credits and references
+## Testing
 
-1. [lichess](https://github.com/ornicar/lila)
-2.
-3.
+Run the following commands from ChessPi root:
+
++ `$ python tests/game_parser_tests.py`
++ `$ python tests/model_tests.py`
+
+All tests should pass.
 
 ## License
 
