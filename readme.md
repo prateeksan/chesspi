@@ -69,6 +69,15 @@ See requirements.txt
 2.
 3.
 
+## Testing
+
+Run the following commands from ChessPi root:
+
++ `$ python tests/game_parser_tests.py`
++ `$ python tests/model_tests.py`
+
+All tests should pass.
+
 ## License
 
 The MIT License (MIT)
