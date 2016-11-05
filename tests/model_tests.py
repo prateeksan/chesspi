@@ -30,6 +30,28 @@ class ModelTests(unittest.TestCase):
 
   def test_create_game(self):
     """Create a Game entry in db"""
+    sample_game = SAMPLE_GAMES[0]
+    game = models.Game(
+      event=sample_game.event,
+      site=sample_game.site,
+      date=sample_game.date,
+      match_round=sample_game.round,
+      result=sample_game.result,
+      white_elo=sample_game.whiteelo,
+      black_elo=sample_game.blackelo,
+      eco=sample_game.eco,
+      )
+    db.session.add(game)
+    db.session.commit()
+    game_from_db = models.Game.query.get(1)
+    print('\n===========================================================')
+    print("\nShould add 1 game to db.")
+    print('\n===========================================================\n')
+    assert (
+      game_from_db and
+      game_from_db.id == 1 and
+      game_from_db.eco == sample_game.eco
+    )
 
   def test_read_game(self):
     """Query a game by id and read its fields"""
