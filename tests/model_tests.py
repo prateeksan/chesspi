@@ -77,9 +77,6 @@ class ModelTests(unittest.TestCase):
     player = self.__create_test_player()
     assert player == models.Player.query.get(1)
 
-  def test_read_player(self):
-    """Query a player by id and read its fields"""
-
   def test_update_player(self):
     """Update fields of a player in db"""
 
