@@ -34,8 +34,7 @@ class ModelTests(unittest.TestCase):
     game = self.__create_test_game()
     game_from_db = models.Game.query.get(1)
     assert (
-      game_from_db and
-      game_from_db.id == 1 and
+      game_from_db == game and
       game_from_db.eco == sample_game.eco
     )
 
