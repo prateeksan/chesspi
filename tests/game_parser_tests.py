@@ -92,6 +92,7 @@ class GameParserTests(unittest.TestCase):
         assert (test_with_id and not 
                 test_no_id and
                 test_with_id['eco'] == 'B22')
+        print('(error message is expected and safe to ignore)')
 
     def test_format_game(self):
         """Method format_game should return games in specified format.
