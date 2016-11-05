@@ -63,10 +63,15 @@ class ModelTests(unittest.TestCase):
     db.session.commit()
     # Read game from db again
     reread_game = models.Game.query.get(1)
-    assert (reread_game.site == 'Mars')
+    assert reread_game.site == 'Mars'
 
   def test_delete_game(self):
     """Delete game entry from db with game id"""
+    game = self.__create_test_game()
+    models.Game.query.filter_by(id=1).delete()
+    db.session.commit()
+    games_count = len(models.Game.query.all())
+    assert games_count == 0
 
   def test_create_player(self):
     """Create a player entry in db"""
