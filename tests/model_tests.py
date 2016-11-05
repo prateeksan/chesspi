@@ -56,6 +56,14 @@ class ModelTests(unittest.TestCase):
 
   def test_update_game(self):
     """Update fields of a game in db"""
+    game = self.__create_test_game()
+    game_from_db = models.Game.query.get(1)
+    game_from_db.site = 'Mars'
+    db.session.add(game_from_db)
+    db.session.commit()
+    # Read game from db again
+    reread_game = models.Game.query.get(1)
+    assert (reread_game.site == 'Mars')
 
   def test_delete_game(self):
     """Delete game entry from db with game id"""
