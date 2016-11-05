@@ -3,6 +3,7 @@ import os
 import unittest
 import sys
 import pgn
+import pdb
 # Set path to parent directory
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -97,7 +98,10 @@ class ModelTests(unittest.TestCase):
 
   def test_create_pairing(self):
     """Create a pairing entry in db"""
-
+    pairing = self.__create_test_pairing()
+    assert (pairing.game_id == pairing.player_id == 1 and
+            pairing.color == 'white')
+    
   def test_pairing_backrefs(self):
     """Check backrefs for both Player and Game in a pairing"""
 
@@ -105,7 +109,7 @@ class ModelTests(unittest.TestCase):
     """Delete a pairing from the db"""
 
   def __create_test_game(self):
-    """Creates a test game entry in db"""
+    """Creates a test game in db"""
     game = models.Game(
       event=sample_game.event,
       site=sample_game.site,
@@ -118,6 +122,7 @@ class ModelTests(unittest.TestCase):
       moves=(",").join(sample_game.moves),
       )
     db.session.add(game)
+    db.session.commit()
     return game
 
   def __create_test_player(self):
@@ -127,7 +132,18 @@ class ModelTests(unittest.TestCase):
       last_name='Carlsen'
       )
     db.session.add(player)
+    db.session.commit()
     return player
+
+  def __create_test_pairing(self):
+    """Creates a test pairing in db"""
+    player = self.__create_test_player()
+    game = self.__create_test_game()
+    pairing = models.Pairing(game_id=game.id, 
+                              player_id=player.id,
+                              color='white')
+    db.session.add(pairing)
+    return pairing
 
 if __name__ == '__main__':
   unittest.main()
