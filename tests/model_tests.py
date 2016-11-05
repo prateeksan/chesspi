@@ -79,6 +79,12 @@ class ModelTests(unittest.TestCase):
 
   def test_update_player(self):
     """Update fields of a player in db"""
+    player = self.__create_test_player()
+    player.first_name = 'Test'
+    db.session.add(player)
+    db.session.commit()
+    reread_player = models.Player.query.get(1)
+    assert reread_player.first_name == 'Test'
 
   def test_delete_player(self):
     """Delete player entry from db with game id"""
