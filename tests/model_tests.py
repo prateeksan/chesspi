@@ -12,7 +12,8 @@ from sample_data.games_string import SAMPLE_GAMES_STRING
 from app import app, db
 from app import models
 
-SAMPLE_GAMES = pgn.loads(SAMPLE_GAMES_STRING)
+sample_games = pgn.loads(SAMPLE_GAMES_STRING)
+sample_game = sample_games[0]
 
 class ModelTests(unittest.TestCase):
   """This class tests all models"""
@@ -30,23 +31,8 @@ class ModelTests(unittest.TestCase):
 
   def test_create_game(self):
     """Create a Game entry in db"""
-    sample_game = SAMPLE_GAMES[0]
-    game = models.Game(
-      event=sample_game.event,
-      site=sample_game.site,
-      date=sample_game.date,
-      match_round=sample_game.round,
-      result=sample_game.result,
-      white_elo=sample_game.whiteelo,
-      black_elo=sample_game.blackelo,
-      eco=sample_game.eco,
-      )
-    db.session.add(game)
-    db.session.commit()
+    game = self.__create_test_game()
     game_from_db = models.Game.query.get(1)
-    print('\n===========================================================')
-    print("\nShould add 1 game to db.")
-    print('\n===========================================================\n')
     assert (
       game_from_db and
       game_from_db.id == 1 and
@@ -55,6 +41,18 @@ class ModelTests(unittest.TestCase):
 
   def test_read_game(self):
     """Query a game by id and read its fields"""
+    game = self.__create_test_game()
+    game_from_db = models.Game.query.get(1)
+    assert (
+      game_from_db.event == sample_game.event and
+      game_from_db.site == sample_game.site and
+      game_from_db.date == sample_game.date and
+      game_from_db.match_round == sample_game.round and
+      game_from_db.result == sample_game.result and
+      game_from_db.white_elo == sample_game.whiteelo and
+      game_from_db.black_elo == sample_game.blackelo and
+      game_from_db.eco == sample_game.eco
+      )
 
   def test_update_game(self):
     """Update fields of a game in db"""
@@ -85,6 +83,23 @@ class ModelTests(unittest.TestCase):
 
   def test_delete_pairing(self):
     """Delete a pairing from the db"""
+
+  def __create_test_game(self):
+    """Creates a test game entry in db"""
+    game = models.Game(
+      event=sample_game.event,
+      site=sample_game.site,
+      date=sample_game.date,
+      match_round=sample_game.round,
+      result=sample_game.result,
+      white_elo=sample_game.whiteelo,
+      black_elo=sample_game.blackelo,
+      eco=sample_game.eco,
+      moves=(",").join(sample_game.moves),
+      )
+    db.session.add(game)
+    db.session.commit()
+    return game
 
 if __name__ == '__main__':
   unittest.main()
