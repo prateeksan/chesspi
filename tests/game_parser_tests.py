@@ -28,9 +28,9 @@ class GameParserTests(unittest.TestCase):
     def test_game_parser_init(self):
         """Test the __init__() function of GameParser"""
         gp = GameParser(pgn_string=SAMPLE_GAMES_STRING)
-        print('\n===========================================================')
-        print("\nShould init GameParser with a pgn string containing 3 games.")
-        print('\n===========================================================\n')
+        # print('\n===========================================================')
+        # print("\nShould init GameParser with a pgn string containing 3 games.")
+        # print('\n===========================================================\n')
         assert len(gp.parsed_games) == 3
 
     def test_add_games(self):
@@ -47,9 +47,9 @@ class GameParserTests(unittest.TestCase):
         pairings = models.Pairing.query.all()
         pairings_added = len(pairings) == 6
 
-        print('\n===========================================================')
-        print("\nShould add 3 games to db along with players and pairings.")
-        print('\n===========================================================\n')
+        # print('\n===========================================================')
+        # print("\nShould add 3 games to db along with players and pairings.")
+        # print('\n===========================================================\n')
         assert players_added and games_added and pairings_added
 
     def test_player_in_db(self):
@@ -64,10 +64,10 @@ class GameParserTests(unittest.TestCase):
         test_player_count = models.Player.query.filter_by(first_name='Gary',
                                                             last_name='Kasparov').count()
 
-        print('\n===========================================================')
-        print("\nKasparov should be added to db only once.")
-        print("\nGameParser(games).player_in_db method should return player id or None.")
-        print('\n===========================================================\n')
+        # print('\n===========================================================')
+        # print("\nKasparov should be added to db only once.")
+        # print("\nGameParser(games).player_in_db method should return player id or None.")
+        # print('\n===========================================================\n')
         assert (player_in_db is not None and
                 isinstance(player_in_db, int) and
                 test_player_count == 1 and
@@ -85,10 +85,10 @@ class GameParserTests(unittest.TestCase):
         gp2 = GameParser(game_id=1)
         test_with_id = gp2.unparse_game(return_type='dict')
 
-        print('\n===========================================================')
-        print("\nMethod unparse_game should return None if no id provided.")
-        print("\nIt should return a game in chosen format when provided a valid id")
-        print('\n===========================================================\n')
+        # print('\n===========================================================')
+        # print("\nMethod unparse_game should return None if no id provided.")
+        # print("\nIt should return a game in chosen format when provided a valid id")
+        # print('\n===========================================================\n')
         assert (test_with_id and not 
                 test_no_id and
                 test_with_id['eco'] == 'B22')
@@ -114,10 +114,10 @@ class GameParserTests(unittest.TestCase):
                     len(loaded_pgn) == 1 and
                     loaded_pgn[0].event == 'Wch U16' and
                     loaded_pgn[0].site == 'Wattignies')
-        print('\n===========================================================')
-        print("\nMethod format_game should return games in specified format.")
-        print("\nIt should return a pgn string if format not specified")
-        print('\n===========================================================\n')
+        # print('\n===========================================================')
+        # print("\nMethod format_game should return games in specified format.")
+        # print("\nIt should return a pgn string if format not specified")
+        # print('\n===========================================================\n')
         assert (dict_check and pgn_check)
 
     def test_format_games(self):
@@ -127,9 +127,9 @@ class GameParserTests(unittest.TestCase):
         games = models.Game.query.all()
         # Should return list of pgn strings by default
         formatted_games = gp.format_games(games)
-        print('\n===========================================================')
-        print("\nShould return a list of formatted games in given return type.")
-        print('\n===========================================================\n')
+        # print('\n===========================================================')
+        # print("\nShould return a list of formatted games in given return type.")
+        # print('\n===========================================================\n')
         assert (len(games) == len(formatted_games) and 
                 isinstance(formatted_games[0], str))
 
@@ -141,9 +141,9 @@ class GameParserTests(unittest.TestCase):
         games = gp.get_games()
         # Only one game in the seed has this eco
         games_with_arg = gp.get_games(request_args={'eco': 'B22'})
-        print('\n===========================================================')
-        print("\nShould return a list of game models. Filtered by args if provided (name/eco)")
-        print('\n===========================================================\n')
+        # print('\n===========================================================')
+        # print("\nShould return a list of game models. Filtered by args if provided (name/eco)")
+        # print('\n===========================================================\n')
         assert (len(games) == 3 and len(games_with_arg) == 1 and
                 games_with_arg[0].eco == games[0].eco == 'B22')
 
@@ -154,9 +154,9 @@ class GameParserTests(unittest.TestCase):
         gp.add_games()
         test_with_id = gp.get_game(2)
         test_default = gp.get_game()
-        print('\n===========================================================')
-        print("\nShould return a single game from db based on id. Returns game 1 by default")
-        print('\n===========================================================\n')
+        # print('\n===========================================================')
+        # print("\nShould return a single game from db based on id. Returns game 1 by default")
+        # print('\n===========================================================\n')
         assert (test_with_id and test_default and
                 test_with_id.eco == 'C11' and
                 test_default.id == 1 and
