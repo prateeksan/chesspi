@@ -148,8 +148,8 @@ class ModelTests(unittest.TestCase):
     return player
 
   def __create_test_pairing(self):
-    """Creates a test pairing in db.
-    Also calls private methods to create test player and game"""
+    """Creates a test pairing in db
+    and calls private methods to create test player and game"""
     player = self.__create_test_player()
     game = self.__create_test_game()
     pairing = models.Pairing(game_id=game.id, 
