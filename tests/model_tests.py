@@ -98,13 +98,13 @@ class ModelTests(unittest.TestCase):
 
   def test_create_pairing(self):
     """Create a pairing entry in db"""
-    pairing = self.__create_test_pairing()
+    pairing = self.__create_mock_pairing()
     assert (pairing.game_id == pairing.player_id == 1 and
             pairing.color == 'white')
 
   def test_pairing_backrefs(self):
     """Check backrefs for both Player and Game in a pairing"""
-    pairing = self.__create_test_pairing()
+    pairing = self.__create_mock_pairing()
     game = models.Game.query.get(1)
     player = models.Player.query.get(1)
     assert (len(game.players) == 1 and
@@ -114,7 +114,7 @@ class ModelTests(unittest.TestCase):
 
   def test_delete_pairing(self):
     """Delete a pairing from the db"""
-    pairing = self.__create_test_pairing()
+    pairing = self.__create_mock_pairing()
     models.Pairing.query.filter_by(player_id=1, game_id=1).delete()
     game = models.Game.query.get(1)
     player = models.Player.query.get(1)
@@ -147,9 +147,9 @@ class ModelTests(unittest.TestCase):
     db.session.commit()
     return player
 
-  def __create_test_pairing(self):
-    """Creates a test pairing in db
-    and calls private methods to create test player and game"""
+  def __create_mock_pairing(self):
+    """Creates a mock pairing in db
+    and calls private methods to create mock player and game"""
     player = self.__create_mock_player()
     game = self.__create_test_game()
     pairing = models.Pairing(game_id=game.id, 
