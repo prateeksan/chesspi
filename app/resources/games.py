@@ -38,6 +38,17 @@ class Game(Resource):
 
         return game_parser.format_game(game, return_type=args['format'])
 
+    def post(self):
+        """Creates a new game via an API request"""
+        # TODO(Test this)
+        # TODO(200 should only be returned on success)
+        # TODO(Add Authentication)
+        args = parser.parse_args()
+        if pgn in args:
+            game_parser = GameParser(pgn_string=args['pgn'])
+            game_parser.add_games()
+        return 200
+
 # GameList
 # Shows a list of all games
 class GameList(Resource):
