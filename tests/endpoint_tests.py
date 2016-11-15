@@ -3,8 +3,8 @@ import os
 import unittest
 import sys
 import pgn
-import pdb
 import json
+
 # Set path to parent directory
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -33,9 +33,6 @@ class EndpointTests(unittest.TestCase):
     db.session.remove()
     db.drop_all()
 
-  #######################
-  # Tests          
-  #######################
 
   def test_root(self):
     """Test root endpoint"""
@@ -44,6 +41,11 @@ class EndpointTests(unittest.TestCase):
 
     assert 'chesspi' in data
     assert 'sample_calls' in data
+
+
+  #######################
+  # Tests for /games
+  #######################
 
   def test_get_games(self):
     """Test games endpoint"""
@@ -98,11 +100,46 @@ class EndpointTests(unittest.TestCase):
     data = self.__get_string(rv)
     assert '[White \\"Chandler, Murray G\\"]\\n[Black \\"Kasparov, Gary\\"]' in data
 
-  def test_players(self):
-    """TODO(Test players endpoint)"""
+
+
+  #######################
+  # Tests for /players
+  #######################
+
+  def test_get_players(self):
+    """Test players endpoint"""
+    rv = self.app.get('/players')
+    data = self.__get_json(rv)
+
+    assert data[0]['last_name'] == 'Chandler'
+    assert data[1]['last_name'] == 'Kasparov'
+
+  def test_get_single_player(self):
+    """Test players endpoint"""
+    rv = self.app.get('/players/2')
+    data = self.__get_json(rv)
+
+    assert data['last_name'] == 'Kasparov'
+  
+  def test_search_players(self):
+    """Test players endpoint"""
+    rv = self.app.get('/players?name=gary')
+    data = self.__get_json(rv)
+
+    assert data[0]['last_name'] == 'Kasparov'
+
+
+  #######################
+  # Tests for /eco_codes
+  #######################
 
   def test_eco_codes(self):
-    """TODO(Test eco_codes endpoint)"""
+    """Test eco_codes endpoint"""
+    rv = self.app.get('/eco_codes')
+    data = self.__get_json(rv)
+
+    assert len(data) > 0
+    assert data[0] == 'B22'
 
   #######################
   # Utilities
