@@ -2,7 +2,6 @@
 import os
 import unittest
 import sys
-import pgn
 import json
 
 # Set path to parent directory
@@ -12,11 +11,10 @@ from config import basedir
 from sample_data.games_string import SAMPLE_GAMES_STRING
 
 from app import app, db
-from app import models
 from app.common.game_parser import GameParser
 
 class EndpointTests(unittest.TestCase):
-  """This class tests all models"""
+  """This class tests all endpoints"""
 
   def setUp(self):
     app.config['TESTING'] = True
@@ -33,15 +31,12 @@ class EndpointTests(unittest.TestCase):
     db.session.remove()
     db.drop_all()
 
-
   def test_root(self):
     """Test root endpoint"""
     rv = self.app.get('/')
     data = self.__get_json(rv)
-
     assert 'chesspi' in data
     assert 'sample_calls' in data
-
 
   #######################
   # Tests for /games
@@ -51,7 +46,6 @@ class EndpointTests(unittest.TestCase):
     """Test games endpoint"""
     rv = self.app.get('/games')
     data = self.__get_json(rv)
-
     assert len(data) == 3
     assert data[0]['white'] == 'Chandler, Murray G'
     assert data[2]['eco'] == 'B45'
@@ -89,7 +83,6 @@ class EndpointTests(unittest.TestCase):
     """Test games endpoint"""
     rv = self.app.get('/games/1')
     data = self.__get_json(rv)
-
     assert data['date'] == '1976.08.27'
     assert data['white'] == 'Chandler, Murray G'
     assert data['black'] == 'Kasparov, Gary'
@@ -100,8 +93,6 @@ class EndpointTests(unittest.TestCase):
     data = self.__get_string(rv)
     assert '[White \\"Chandler, Murray G\\"]\\n[Black \\"Kasparov, Gary\\"]' in data
 
-
-
   #######################
   # Tests for /players
   #######################
@@ -110,7 +101,6 @@ class EndpointTests(unittest.TestCase):
     """Test players endpoint"""
     rv = self.app.get('/players')
     data = self.__get_json(rv)
-
     assert data[0]['last_name'] == 'Chandler'
     assert data[1]['last_name'] == 'Kasparov'
 
@@ -118,16 +108,13 @@ class EndpointTests(unittest.TestCase):
     """Test players endpoint"""
     rv = self.app.get('/players/2')
     data = self.__get_json(rv)
-
     assert data['last_name'] == 'Kasparov'
   
   def test_search_players(self):
     """Test players endpoint"""
     rv = self.app.get('/players?name=gary')
     data = self.__get_json(rv)
-
     assert data[0]['last_name'] == 'Kasparov'
-
 
   #######################
   # Tests for /eco_codes
@@ -137,7 +124,6 @@ class EndpointTests(unittest.TestCase):
     """Test eco_codes endpoint"""
     rv = self.app.get('/eco_codes')
     data = self.__get_json(rv)
-
     assert len(data) > 0
     assert data[0] == 'B22'
 
