@@ -41,7 +41,7 @@ class Game(Resource):
 # GameList
 # Shows a list of all games
 class GameList(Resource):
-    decorators = [limiter.limit("1/second")]
+    decorators = [limiter.limit("60/minute")]
     def get(self):
         args = parser.parse_args()
 
