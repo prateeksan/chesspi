@@ -97,6 +97,7 @@ class EndpointTests(unittest.TestCase):
     """Post request to /games. 
     Posting with a pgn should enter the game to the db"""
     # TODO(test isnt right because request is not made properly. fix this)
+    self.__clear_db()
     data = json.dumps({'data': {'pgn': SAMPLE_GAMES_STRING}})
     rv = self.app.post('/games', data=data)
     games = models.Game.query.all()
@@ -146,6 +147,13 @@ class EndpointTests(unittest.TestCase):
 
   def __get_string(self, request):
     return request.get_data().decode('utf-8')
+
+  def __clear_db(self):
+    """Deletes all entries in all tables"""
+    pairings = models.Pairing.query.all.delete()
+    games = models.Game.query.all.delete()
+    players = models.Player.query.all.delete()
+    db.session.commit()
 
 if __name__ == '__main__':
   unittest.main()
