@@ -52,7 +52,6 @@ class GameList(Resource):
 
     def post(self):
         """Creates a new game via an API request"""
-        # TODO(Test this)
         # TODO(Add Authentication)
         data = json.loads(request.form['data'])
         if 'pgn' in data:
