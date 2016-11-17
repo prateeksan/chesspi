@@ -52,7 +52,7 @@ class GameList(Resource):
 
     def post(self):
         """Creates a new game via an API request"""
-        # TODO(Add Authentication)
+        # NOTE(for deployment, an authentication strategy for this endpoint is highly recommended)
         data = json.loads(request.form['data'])
         if 'pgn' in data:
             game_parser = GameParser(pgn_string=data['pgn'])
