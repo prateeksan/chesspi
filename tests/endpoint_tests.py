@@ -98,8 +98,9 @@ class EndpointTests(unittest.TestCase):
     Posting with a pgn should enter the game to the db"""
     # TODO(test isnt right because request is not made properly. fix this)
     self.__clear_db()
-    data = json.dumps({'data': {'pgn': SAMPLE_GAMES_STRING}})
-    rv = self.app.post('/games', data=data)
+    data = {'data': json.dumps({'pgn': SAMPLE_GAMES_STRING})}
+    rv = self.app.post('/games', data=data, content_type='application/json')
+    print(rv.get_data())
     games = models.Game.query.all()
     players = models.Player.query.all()
     assert len(games) == 3 and len(players) == 4 and games[0].eco == 'B22'
@@ -150,9 +151,9 @@ class EndpointTests(unittest.TestCase):
 
   def __clear_db(self):
     """Deletes all entries in all tables"""
-    pairings = models.Pairing.query.all.delete()
-    games = models.Game.query.all.delete()
-    players = models.Player.query.all.delete()
+    models.Pairing.query.delete()
+    models.Game.query.delete()
+    models.Player.query.delete()
     db.session.commit()
 
 if __name__ == '__main__':
