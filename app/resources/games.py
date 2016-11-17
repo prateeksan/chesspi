@@ -54,9 +54,11 @@ class GameList(Resource):
         """Creates a new game via an API request"""
         # NOTE(for deployment, an authentication strategy for this endpoint is highly recommended)
         data = json.loads(request.form['data'])
+
         if 'pgn' in data:
             game_parser = GameParser(pgn_string=data['pgn'])
             game_parser.add_games()
+
             return json.dumps({'status': 200, 'message': 'Games Successfully Parsed.'})
         else:
             return json.dumps({'status': 300, 'message': """Error: Field not found => 'pgn'. 
