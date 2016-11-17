@@ -96,6 +96,7 @@ class EndpointTests(unittest.TestCase):
   def test_post_games(self):
     """Post request to /games. 
     Posting with a pgn should enter the game to the db"""
+    # TODO(test isnt right because request is not made properly. fix this)
     data = json.dumps({'data': {'pgn': SAMPLE_GAMES_STRING}})
     rv = self.app.post('/games', data=data)
     games = models.Game.query.all()
