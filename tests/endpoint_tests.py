@@ -10,7 +10,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config import basedir
 from sample_data.games_string import SAMPLE_GAMES_STRING
 
-from app import app, db
+from app import app, db, models
 from app.common.game_parser import GameParser
 
 class EndpointTests(unittest.TestCase):
@@ -92,6 +92,15 @@ class EndpointTests(unittest.TestCase):
     rv = self.app.get('/games/1?format=pgn')
     data = self.__get_string(rv)
     assert '[White \\"Chandler, Murray G\\"]\\n[Black \\"Kasparov, Gary\\"]' in data
+
+  def test_post_games(self):
+    """Post request to /games. 
+    Posting with a pgn should enter the game to the db"""
+    data = json.dumps({'data': {'pgn': SAMPLE_GAMES_STRING}})
+    rv = self.app.post('/games', data=data)
+    games = models.Game.query.all()
+    players = models.Player.query.all()
+    assert len(games) == 3 and len(players) == 4 and games[0].eco == 'B22'
 
   #######################
   # Tests for /players
