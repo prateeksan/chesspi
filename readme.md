@@ -2,21 +2,24 @@
 
 Built by @edmundlam and @prateeksan
 
-ChessPi is simple RESTful API for chess applications built with Flask-Restful. 
+ChessPi is a RESTful API & database for chess games. It is free to use, free to fork and free to admire. If you are a developer/chess lover looking to set up a chess games database, ChessPi might come in handy. 
 
 Features include:
 
-* Endpoints to query games and players
-* Endpoints to add new games and players
-* Parsers to import pgn files into the database
+* Endpoints to query games as PGN strings or JSONified dictionaries.
+* Query filters to search for specific sets of games. 
+* Endpoints to query players.
+* Endpoints to add new games (players are added automatically)
+* A game parser that connects the database to the API.
 
 ## Endpoints
 
 ### POST
 
+**/games**
+
 ```
 data = '{"data": {"pgn": "<pgn_string>"}}'
-/games
 ```
 
 ### GET
@@ -55,11 +58,11 @@ data = '{"data": {"pgn": "<pgn_string>"}}'
 
 ## Status
 
-Under construction
+Alpha
 
-## Demo
+## Latest Version
 
-Link to demo version here
+1.0.0
 
 ## Dependencies
 
@@ -78,6 +81,7 @@ Run the following commands from ChessPi root:
 
 + `python tests/game_parser_tests.py`
 + `python tests/model_tests.py`
++ `python tests/endpoint_tests.py`
 
 All tests should pass.
 
