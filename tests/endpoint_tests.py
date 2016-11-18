@@ -98,8 +98,8 @@ class EndpointTests(unittest.TestCase):
     Posting with a pgn should enter the game to the db"""
     # TODO(test isnt right because request is not made properly. fix this)
     self.__clear_db()
-    data = {'data': json.dumps({'pgn': SAMPLE_GAMES_STRING})}
-    rv = self.app.post('/games', data=data, content_type='application/json')
+    data = {'data': {'pgn': SAMPLE_GAMES_STRING}}
+    rv = self.app.post('/games', data=json.dumps(data), content_type='application/json')
     print(rv.get_data())
     games = models.Game.query.all()
     players = models.Player.query.all()
