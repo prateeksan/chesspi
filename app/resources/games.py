@@ -1,5 +1,5 @@
-from flask_restful import Resource, abort, reqparse
-import pgn
+from flask_restful import Resource, abort, reqparse, request
+import pgn, json
 
 # Import app modules:
 from app.common.game_parser import GameParser
@@ -41,7 +41,7 @@ class Game(Resource):
 # GameList
 # Shows a list of all games
 class GameList(Resource):
-    decorators = [limiter.limit("1/second")]
+    decorators = [limiter.limit("60/minute")]
     def get(self):
         args = parser.parse_args()
 
@@ -49,3 +49,19 @@ class GameList(Resource):
         games = game_parser.get_games(args)
 
         return game_parser.format_games(games, return_type=args['format'])
+
+    def post(self):
+        """Creates a new game via an API request"""
+        # NOTE(for deployment, an authentication strategy for this endpoint is highly recommended)
+
+        request_params = request.get_json()
+        data = request_params['data']
+
+        if 'pgn' in data:
+            game_parser = GameParser(pgn_string=data['pgn'])
+            game_parser.add_games()
+
+            return json.dumps({'status': 200, 'message': 'Games Successfully Parsed.'})
+        else:
+            return json.dumps({'status': 300, 'message': """Error: Field not found => 'pgn'. 
+                    Please post the data in following format: {data: '{pgn: "<game(s)>"}'}"""})

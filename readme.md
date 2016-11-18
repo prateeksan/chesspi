@@ -12,6 +12,15 @@ Features include:
 
 ## Endpoints
 
+### POST
+
+```
+data = '{"data": {"pgn": "<pgn_string>"}}'
+/games
+```
+
+### GET
+
 **/games**
 
 ```

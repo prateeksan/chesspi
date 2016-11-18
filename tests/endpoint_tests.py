@@ -10,7 +10,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config import basedir
 from sample_data.games_string import SAMPLE_GAMES_STRING
 
-from app import app, db
+from app import app, db, models
 from app.common.game_parser import GameParser
 
 class EndpointTests(unittest.TestCase):
@@ -93,6 +93,18 @@ class EndpointTests(unittest.TestCase):
     data = self.__get_string(rv)
     assert '[White \\"Chandler, Murray G\\"]\\n[Black \\"Kasparov, Gary\\"]' in data
 
+  def test_post_games(self):
+    """Post request to /games. 
+    Posting with a pgn should enter the game to the db"""
+    # TODO(test isnt right because request is not made properly. fix this)
+    self.__clear_db()
+    data = {'data': {'pgn': SAMPLE_GAMES_STRING}}
+    rv = self.app.post('/games', data=json.dumps(data), content_type='application/json')
+    print(rv.get_data())
+    games = models.Game.query.all()
+    players = models.Player.query.all()
+    assert len(games) == 3 and len(players) == 4 and games[0].eco == 'B22'
+
   #######################
   # Tests for /players
   #######################
@@ -136,6 +148,13 @@ class EndpointTests(unittest.TestCase):
 
   def __get_string(self, request):
     return request.get_data().decode('utf-8')
+
+  def __clear_db(self):
+    """Deletes all entries in all tables"""
+    models.Pairing.query.delete()
+    models.Game.query.delete()
+    models.Player.query.delete()
+    db.session.commit()
 
 if __name__ == '__main__':
   unittest.main()
