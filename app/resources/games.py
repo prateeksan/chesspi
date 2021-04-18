@@ -14,11 +14,11 @@ parser.add_argument('format', type=str,
     choices=("json", "pgn"),
     case_sensitive=False,
     help='Valid formats: json (default) or pgn')
-parser.add_argument('name', type=str, 
+parser.add_argument('name', type=str,
     case_sensitive=False,
     store_missing=False,
     help='Name of player')
-parser.add_argument('eco', type=str, 
+parser.add_argument('eco', type=str,
     case_sensitive=False,
     store_missing=False,
     help='Encyclopedia of Chess Opening (ECO) Codes')
@@ -55,10 +55,11 @@ class GameList(Resource):
         # NOTE(for deployment, an authentication strategy for this endpoint is highly recommended)
 
         request_params = request.get_json()
+        delimiter = request_params['delimiter']
         data = request_params['data']
 
         if 'pgn' in data:
-            game_parser = GameParser(pgn_string=data['pgn'])
+            game_parser = GameParser(pgn_string=data['pgn'], delimiter=delimiter)
             game_parser.add_games()
 
             return json.dumps({'status': 200, 'message': 'Games Successfully Parsed.'})

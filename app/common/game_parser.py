@@ -7,11 +7,11 @@ class GameParser:
     Populate the Game table with parsed games.
     Unparse games and return them as pgns or strings."""
 
-    def __init__(self, pgn_string=None, game_id=None, verbose=False):
+    def __init__(self, pgn_string=None, game_id=None, verbose=False, delimiter='|'):
         """Init the GameParser either with a pgn string or with a game id.
         Game id should correspond with the Game.id in the database."""
 
-        self.pgn = pgn_string
+        self.pgn = '\n'.join(pgn_string.split(delimiter))
         self.game_id = game_id
         self.parsed_games = pgn.loads(self.pgn) if self.pgn else None
         self.verbose = verbose
@@ -35,7 +35,7 @@ class GameParser:
     def format_game(self, game, return_type='pgn'):
         """Formats a game model into a pgn or dictionary"""
 
-        players = self.__unparse_players_with_color(players=game.players, 
+        players = self.__unparse_players_with_color(players=game.players,
                                                     game_id=game.id)
         # Preparing the game object for a pgn dumps
         game.white = players['white'].full_name()
@@ -86,7 +86,7 @@ class GameParser:
                 self.__print("Adding game {} vs {} {}".format(game.white, game.black, game.date))
 
                 # Returns dict like: {white: <id>, black: <id>}
-                db_player_ids = self.__add_players(white=game.white, 
+                db_player_ids = self.__add_players(white=game.white,
                                                     black=game.black)
                 db_game_id = self.__add_game(game)
                 self.__add_pairings(game_id=db_game_id,
@@ -98,7 +98,7 @@ class GameParser:
         games = models.Game.query.all()
         if any(request_args):
             games = list(filter(lambda g: self.__game_match(g, request_args), games))
-        
+
         return games
 
     def get_game(self, id=1):
@@ -205,7 +205,7 @@ class GameParser:
         name_array = name_string.split(',')
         name_dict['first_name'] = name_array[1].strip() if len(name_array) > 1 else ''
         name_dict['last_name'] = name_array[0].strip()
-        return name_dict 
+        return name_dict
 
     def __add_pairings(self, game_id, player_ids):
         """Receives a game_id and a dict with player ids,
@@ -214,7 +214,7 @@ class GameParser:
         black_pairing = models.Pairing(game_id=game_id,
                                         player_id=player_ids['black'],
                                         color='black')
-        white_pairing = models.Pairing(game_id=game_id, 
+        white_pairing = models.Pairing(game_id=game_id,
                                         player_id = player_ids['white'],
                                         color='white')
         db.session.add(black_pairing)
