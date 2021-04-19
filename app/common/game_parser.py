@@ -7,11 +7,13 @@ class GameParser:
     Populate the Game table with parsed games.
     Unparse games and return them as pgns or strings."""
 
-    def __init__(self, pgn_string=None, game_id=None, verbose=False, delimiter='|'):
+    def __init__(self, pgn_string=None, game_id=None, verbose=False, delimiter=None):
         """Init the GameParser either with a pgn string or with a game id.
         Game id should correspond with the Game.id in the database."""
-
-        self.pgn = '\n'.join(pgn_string.split(delimiter))
+        if pgn_string:
+            self.pgn = '\n'.join(pgn_string.split(delimiter))
+        else:
+            self.pgn = None
         self.game_id = game_id
         self.parsed_games = pgn.loads(self.pgn) if self.pgn else None
         self.verbose = verbose
